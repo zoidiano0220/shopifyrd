@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>shopifyRD — Todo lo que necesitas, en un solo lugar</title>
+  <meta name="description" content="Compra tecnología, hogar, moda y más con envío gratis y entrega el mismo día. Paga al recibir tu pedido.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="canonical" href="https://shopifyrd.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="shopifyRD">
+  <meta property="og:locale" content="es_DO">
+  <meta property="og:title" content="shopifyRD — Todo lo que necesitas, en un solo lugar">
+  <meta property="og:description" content="Compra belleza, salud, hogar, tecnología, moda y más. Envío gratis y paga al recibir tu pedido.">
+  <meta property="og:url" content="https://shopifyrd.com/">
+  <meta property="og:image" content="https://shopifyrd.com/perfil-512.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="icono.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Iconos (sprite) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/><circle cx="9" cy="6" r="2" fill="var(--surface)"/><circle cx="15" cy="12" r="2" fill="var(--surface)"/><circle cx="8" cy="18" r="2" fill="var(--surface)"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M3 21l1.65-4.9A8.5 8.5 0 1 1 8 19.4Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .8c-1-.4-2-1.4-2.4-2.4l.8-1-1-2Z"/></symbol>
+</svg>
+
+<!-- Barra superior -->
+<div class="topbar" role="region" aria-label="Avisos">
+  <div class="container topbar__inner">
+    <p class="topbar__msg" id="topbarMsg" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- Encabezado -->
+<header class="header" id="header">
+  <div class="container header__row">
+    <a href="#" class="logo" aria-label="shopifyRD — Inicio">
+      <img class="logo__img logo__img--light" src="shopifyRD.svg" alt="shopifyRD" width="281" height="64">
+      <img class="logo__img logo__img--dark" src="shopifyRD-blanco.svg" alt="" width="281" height="64" aria-hidden="true">
+    </a>
+
+    <div class="search" id="search">
+      <form id="searchForm" role="search" autocomplete="off">
+        <input id="searchInput" type="search" placeholder="Buscar productos, categorías…  ( / )" aria-label="Buscar productos">
+        <button type="submit" aria-label="Buscar"><svg class="icon"><use href="#i-search"/></svg></button>
+      </form>
+      <div class="suggest" id="suggest" role="listbox"></div>
+    </div>
+
+    <div class="actions">
+      <button class="iconbtn" id="themeBtn" aria-label="Cambiar tema"><svg class="icon"><use href="#i-moon"/></svg></button>
+      <button class="iconbtn" id="wishBtn" aria-label="Ver favoritos">
+        <svg class="icon"><use href="#i-heart"/></svg><span class="count" id="wishCount" hidden>0</span>
+      </button>
+      <button class="iconbtn iconbtn--cart" id="cartBtn" aria-label="Abrir carrito">
+        <svg class="icon"><use href="#i-cart"/></svg><span class="count" id="cartCount" hidden>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Navegación por categorías -->
+<nav class="catnav" aria-label="Categorías">
+  <div class="container catnav__row" id="catNav"></div>
+</nav>
+
+<main id="top">
+
+  <!-- Banner principal -->
+  <section class="hero" aria-label="Destacados">
+    <div class="container">
+      <div class="hero__wrap" id="hero">
+        <div id="heroSlides"></div>
+        <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Anterior"><svg class="icon"><use href="#i-left"/></svg></button>
+        <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Siguiente"><svg class="icon"><use href="#i-right"/></svg></button>
+        <div class="hero__dots" id="heroDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beneficios -->
+  <section class="perks" aria-label="Beneficios">
+    <div class="container perks__grid" id="perks"></div>
+  </section>
+
+  <!-- Categorías -->
+  <section class="section" id="categorias">
+    <div class="container">
+      <div class="section__head reveal">
+        <div>
+          <span class="eyebrow">Explora</span>
+          <h2>Compra por categoría</h2>
+        </div>
+      </div>
+      <div class="cats" id="cats"></div>
+    </div>
+  </section>
+
+  <!-- Ofertas del día -->
+  <section class="section section--tight" id="ofertas" hidden>
+    <div class="container">
+      <div class="deals reveal">
+        <div class="deals__head">
+          <div>
+            <span class="eyebrow eyebrow--light"><svg class="icon"><use href="#i-zap"/></svg> Ofertas del día</span>
+            <h2>Aprovecha antes de que se acaben</h2>
+          </div>
+          <div class="countdown" aria-label="Tiempo restante de las ofertas">
+            <span class="countdown__label">Termina en</span>
+            <div class="countdown__boxes" id="countdown">
+              <div><b data-t="h">00</b><small>hrs</small></div>
+              <div><b data-t="m">00</b><small>min</small></div>
+              <div><b data-t="s">00</b><small>seg</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="deals__wrap">
+          <button class="deals__arrow deals__arrow--prev" id="dealsPrev" aria-label="Anterior"><svg class="icon"><use href="#i-left"/></svg></button>
+          <div class="deals__row" id="dealsRow"></div>
+          <button class="deals__arrow deals__arrow--next" id="dealsNext" aria-label="Siguiente"><svg class="icon"><use href="#i-right"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section class="section" id="catalogo">
+    <div class="container">
+      <div class="section__head reveal">
+        <div>
+          <span class="eyebrow">Catálogo</span>
+          <h2>Todos los productos</h2>
+        </div>
+      </div>
+
+      <div class="toolbar reveal" id="toolbar">
+        <div class="chips" id="chips" role="tablist" aria-label="Filtrar por categoría"></div>
+        <div class="toolbar__controls">
+          <label class="price">
+            <span>Precio hasta <b id="priceOut"></b></span>
+            <input type="range" id="priceRange" min="0" max="100" value="100" aria-label="Precio máximo">
+          </label>
+          <label class="select">
+            <span class="sr-only">Ordenar por</span>
+            <select id="sortSel">
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+              <option value="rating">Mejor valorados</option>
+              <option value="discount">Mayor descuento</option>
+            </select>
+            <svg class="icon"><use href="#i-down"/></svg>
+          </label>
+          <button class="btn btn--ghost" id="favFilter" aria-pressed="false"><svg class="icon"><use href="#i-heart"/></svg> Favoritos</button>
+        </div>
+      </div>
+
+      <div class="resultbar" id="resultBar" aria-live="polite"></div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" hidden></div>
+      <div class="loadmore"><button class="btn btn--ghost btn--lg" id="loadMore" hidden>Ver más productos</button></div>
+    </div>
+  </section>
+
+  <!-- Cómo comprar -->
+  <section class="section section--soft" id="como-comprar">
+    <div class="container">
+      <div class="section__head section__head--center reveal">
+        <div>
+          <span class="eyebrow">Fácil y rápido</span>
+          <h2>Cómo comprar</h2>
+        </div>
+      </div>
+      <ol class="steps">
+        <li class="step reveal"><span class="step__n">1</span><h3>Elige tus productos</h3><p>Navega el catálogo, mira los detalles y agrégalos al carrito.</p></li>
+        <li class="step reveal"><span class="step__n">2</span><h3>Confirma tu pedido</h3><p>Llena tus datos de entrega y elige "Pago contra entrega".</p></li>
+        <li class="step reveal"><span class="step__n">3</span><h3>Recíbelo en tu puerta</h3><p>Te lo llevamos a tu casa y pagas en efectivo cuando lo recibas.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes -->
+  <section class="section" id="faq">
+    <div class="container container--narrow">
+      <div class="section__head section__head--center reveal">
+        <div>
+          <span class="eyebrow">Ayuda</span>
+          <h2>Preguntas frecuentes</h2>
+        </div>
+      </div>
+      <div class="faq reveal" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- Llamado a WhatsApp -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="cta reveal">
+        <div>
+          <h2>¿No encuentras lo que buscas?</h2>
+          <p>Escríbenos y te ayudamos a conseguirlo. Respondemos rápido.</p>
+        </div>
+        <a class="btn btn--light btn--lg" id="ctaWa" target="_blank" rel="noopener"><svg class="icon"><use href="#i-wa"/></svg> Escríbenos por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Pie de página -->
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="#" class="logo" aria-label="shopifyRD — Inicio"><img class="logo__img" src="shopifyRD-blanco.svg" alt="shopifyRD" width="281" height="64"></a>
+      <p data-store="tagline"></p>
+      <div class="social" id="social"></div>
+    </div>
+    <div>
+      <h4>Categorías</h4>
+      <ul id="footCats"></ul>
+    </div>
+    <div>
+      <h4>Ayuda</h4>
+      <ul>
+        <li><a href="#como-comprar">Cómo comprar</a></li>
+        <li><a href="#faq">Preguntas frecuentes</a></li>
+        <li><a href="#catalogo">Catálogo</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul class="contact" id="footContact"></ul>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© <span id="year"></span> <span data-store="name">shopifyRD</span>. Todos los derechos reservados.</span>
+    <span class="pay" id="payList"></span>
+  </div>
+</footer>
+
+<!-- Botones flotantes -->
+<div class="fabs">
+  <button class="fab fab--up" id="toTop" aria-label="Volver arriba"><svg class="icon"><use href="#i-up"/></svg></button>
+  <a class="fab fab--wa" id="fabWa" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><svg class="icon"><use href="#i-wa"/></svg></a>
+</div>
+
+<!-- Capas: overlay, carrito, vista rápida, checkout -->
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="cartDrawer" aria-label="Carrito de compras" aria-hidden="true">
+  <div class="drawer__head">
+    <h3>Tu carrito <span class="muted" id="cartTitleCount"></span></h3>
+    <button class="iconbtn" data-close aria-label="Cerrar carrito"><svg class="icon"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="ship" id="shipBar"></div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot"></div>
+</aside>
+
+<div class="modal" id="productModal" role="dialog" aria-modal="true" aria-label="Detalle del producto" aria-hidden="true">
+  <div class="modal__panel modal__panel--wide">
+    <button class="iconbtn modal__close" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
+    <div id="productBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Finalizar compra" aria-hidden="true">
+  <div class="modal__panel modal__panel--checkout">
+    <button class="iconbtn modal__close" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
+    <div id="checkoutBody"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

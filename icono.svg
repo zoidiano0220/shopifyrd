@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="shopifyRD">
+  <title>shopifyRD</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="17" fill="url(#g)"/>
+  <path d="M24 27v-5a8 8 0 0 1 16 0v5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M18.5 26h27a2 2 0 0 1 2 1.8l2.5 20.5a4.5 4.5 0 0 1-4.5 5h-27a4.5 4.5 0 0 1-4.5-5l2.5-20.5a2 2 0 0 1 2-1.8z" fill="#fff"/>
+  <path d="M26.5 46V33h6.2a4.2 4.2 0 0 1 0 8.4H26.5m6.2 0L37 46" fill="none" stroke="url(#g)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
