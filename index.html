@@ -238,6 +238,9 @@
   </section>
 </main>
 
+<!-- Página de producto (se llena desde app.js) -->
+<main class="pview" id="productView" aria-live="polite" hidden></main>
+
 <!-- Pie de página -->
 <footer class="footer">
   <div class="container footer__grid">
@@ -288,12 +291,6 @@
   <div class="drawer__foot" id="cartFoot"></div>
 </aside>
 
-<div class="modal" id="productModal" role="dialog" aria-modal="true" aria-label="Detalle del producto" aria-hidden="true">
-  <div class="modal__panel modal__panel--wide">
-    <button class="iconbtn modal__close" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
-    <div id="productBody"></div>
-  </div>
-</div>
 
 <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Finalizar compra" aria-hidden="true">
   <div class="modal__panel modal__panel--checkout">

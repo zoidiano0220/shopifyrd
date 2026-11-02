@@ -602,3 +602,38 @@ html.no-scroll .toasts { bottom: auto; top: 1rem; }
 .card--skeleton i.short { width: 55%; }
 .card--skeleton .card__body { gap: .7rem; padding-bottom: 1.4rem; }
 @keyframes shimmer { to { background-position: -220% 0; } }
+
+/* ==========================================================================
+   Página de producto (apartado propio de cada producto)
+   ========================================================================== */
+.pview { padding: 1.25rem 0 4.5rem; min-height: 60vh; }
+.pview__loading { padding: 4rem 0; text-align: center; }
+.crumbs { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: .25rem 0 1rem; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.crumbs button { display: inline-flex; align-items: center; gap: .3rem; color: inherit; font-weight: 700; }
+.crumbs button:hover { color: var(--brand); }
+.crumbs button .icon { transform: scaleX(-1); width: 1rem; height: 1rem; }
+.crumbs .cur { color: var(--text); max-width: 42ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pview .pd { background: var(--surface); border: 1px solid var(--border); border-radius: 26px; box-shadow: var(--shadow-sm); overflow: hidden; }
+.pview .pd__info h1 { font-size: clamp(1.5rem, 2.6vw, 2.15rem); line-height: 1.2; letter-spacing: -.02em; font-weight: 800; }
+.pshare { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.pshare a, .pshare button { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; color: var(--text); }
+.pshare a:hover, .pshare button:hover { color: var(--brand); }
+.pdesc { margin-top: 1.5rem; padding: 1.75rem 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--shadow-sm); }
+.pdesc h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+.pdesc__body { max-width: 78ch; line-height: 1.75; overflow-wrap: anywhere; }
+.pdesc__body p { margin: 0 0 .9rem; }
+.pdesc__body p:last-child { margin-bottom: 0; }
+.pdesc__body h4 { margin: 1.2rem 0 .5rem; font-size: 1rem; font-weight: 800; }
+.pdesc__body ul, .pdesc__body ol { margin: 0 0 .9rem; padding-left: 1.3rem; }
+.pdesc__body ul { list-style: disc; }
+.pdesc__body ol { list-style: decimal; }
+.pdesc__body li { margin-bottom: .35rem; }
+.prelated { margin-top: 2.75rem; }
+.prelated h2 { margin-bottom: 1.25rem; font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+@media (max-width: 640px) {
+  .pview { padding-top: .75rem; }
+  .pview .pd { border-radius: 20px; }
+  .pview .pd__main { aspect-ratio: 1 / 1; max-height: none; }
+  .pdesc { padding: 1.25rem; }
+  .crumbs .cur { max-width: 22ch; }
+}

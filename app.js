@@ -60,8 +60,8 @@
   }`;
   const DETAIL_QUERY = `query Detail($handle: String!) {
     product(handle: $handle) {
-      description
-      images(first: 8) { nodes { url(transform: { maxWidth: 900 }) } }
+      description descriptionHtml
+      images(first: 12) { nodes { url(transform: { maxWidth: 900 }) } }
       variants(first: 50) { nodes { ${VARIANT_FIELDS} } }
     }
   }`;
@@ -447,7 +447,7 @@
   }
 
   const refresh = () => { f.shown = S.pageSize; renderCatalog(); syncCatUI(); };
-  const goCatalog = () => $('#catalogo').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+  const goCatalog = () => { leaveProduct(); $('#catalogo').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); };
 
   function setCategory(id) { f.cat = id; f.q = ''; $('#searchInput').value = ''; refresh(); goCatalog(); }
   function setFav(on) {
@@ -563,7 +563,7 @@
   /* ==========================================================================
      Capas (carrito, vista rápida, checkout)
      ========================================================================== */
-  const layers = { cart: $('#cartDrawer'), product: $('#productModal'), checkout: $('#checkoutModal') };
+  const layers = { cart: $('#cartDrawer'), checkout: $('#checkoutModal') };
   const overlay = $('#overlay');
   let openName = null, lastFocus = null;
 
@@ -599,6 +599,7 @@
       p.detailed = true;
       if (!product) return false;
       p.description = product.description || '';
+      p.descriptionHtml = product.descriptionHtml || '';
       const imgs = (product.images?.nodes || []).map((i) => i.url);
       if (imgs.length) p.images = imgs;
       const vs = (product.variants?.nodes || []).map((v) => mkVariant(shopifyVariant(v)));
@@ -611,11 +612,104 @@
     } catch (err) { console.error('No se pudo cargar el detalle del producto', err); return false; }
   }
 
+  /* ==========================================================================
+     Página de producto: cada producto tiene su propio apartado (#/producto/<handle>)
+     con galería, precio, compra y descripción completa. Funciona con el botón
+     "atrás" del navegador y el enlace se puede compartir.
+     ========================================================================== */
+  const home = $('#top'), view = $('#productView');
+  const baseTitle = document.title, descMeta = $('meta[name="description"]');
+  const baseDesc = descMeta?.getAttribute('content') || '';
+  let inProduct = false, homeY = 0;
+
+  const productHash = () => {
+    const m = location.hash.match(/^#\/producto\/(.+)$/) || location.hash.match(/^#producto=(.+)$/);
+    if (!m) return null;
+    try { return decodeURIComponent(m[1]); } catch { return m[1]; }
+  };
+
+  // Deja solo formato básico (párrafos, saltos, listas, negritas): la descripción viene de Shopify
+  const KEEP = new Set(['P', 'BR', 'UL', 'OL', 'LI', 'STRONG', 'B', 'EM', 'I', 'U', 'H4']);
+  const DROP = /^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|FORM|INPUT|BUTTON|IMG|SVG|LINK|META|VIDEO|AUDIO)$/;
+  function cleanHTML(html) {
+    const doc = new DOMParser().parseFromString(`<body>${html}</body>`, 'text/html');
+    const walk = (node) => {
+      [...node.childNodes].forEach((c) => {
+        if (c.nodeType === 3) return;
+        if (c.nodeType !== 1 || DROP.test(c.tagName)) { c.remove(); return; }
+        walk(c);
+        if (/^H[1-6]$/.test(c.tagName)) { const h = doc.createElement('h4'); h.append(...c.childNodes); c.replaceWith(h); return; }
+        if (!KEEP.has(c.tagName)) { c.replaceWith(...c.childNodes); return; }
+        [...c.attributes].forEach((a) => c.removeAttribute(a.name));
+      });
+    };
+    walk(doc.body);
+    return doc.body.innerHTML.trim();
+  }
+  const descHTML = (p) => {
+    const rich = p.descriptionHtml ? cleanHTML(p.descriptionHtml) : '';
+    if (rich) return rich;
+    return String(p.description || '').split(/\n+/).map((l) => l.trim()).filter(Boolean).map((l) => `<p>${esc(l)}</p>`).join('');
+  };
+
+  function showHome() {
+    if (!inProduct) return;
+    inProduct = false; view.hidden = true; home.hidden = false;
+    document.title = baseTitle; descMeta?.setAttribute('content', baseDesc);
+  }
+  // Salir de la ficha sin tocar el historial del producto (para filtros, búsqueda, categorías)
+  function leaveProduct() {
+    if (!inProduct) return;
+    history.pushState(null, '', location.pathname + location.search);
+    showHome();
+  }
+  // Maneja "atrás", enlaces directos y anclas (#catalogo, #faq…)
+  function route() {
+    const id = productHash();
+    if (id) { renderProductPage(id); return; }
+    const was = inProduct;
+    showHome();
+    if (!was) return;
+    const anchor = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    if (anchor) anchor.scrollIntoView(); else window.scrollTo(0, homeY);
+  }
+  window.addEventListener('hashchange', route);
+
   function openProduct(id, keep = false) {
-    const p = byId(id); if (!p) return;
+    if (openName) closeLayer();
+    if (!keep) {
+      if (!inProduct) homeY = scrollY;
+      if (productHash() !== id) history.pushState({ pp: 1 }, '', '#/producto/' + encodeURIComponent(id));
+    }
+    renderProductPage(id, keep);
+  }
+
+  function renderProductPage(id, keep = false) {
+    const p = byId(id);
+    inProduct = true; home.hidden = true; view.hidden = false;
+    if (!p) {
+      view.innerHTML = `<div class="container"><div class="empty"><div class="empty__emoji">🔎</div><h3>No encontramos este producto</h3>
+        <p>Puede que ya no esté disponible. Mira el resto de nuestro catálogo.</p>
+        <button class="btn btn--primary" data-action="home">Ver la tienda</button></div></div>`;
+      window.scrollTo(0, 0);
+      return;
+    }
     const first = keep && pd && pd.p === p && p.variants[pd.vi] ? pd.vi : Math.max(0, p.variants.findIndex((v) => v.stock > 0));
     pd = { p, vi: first, qty: keep && pd && pd.p === p ? pd.qty : 1 };
-    $('#productBody').innerHTML = `
+    const catName = catById(p.category)?.name || '';
+    const desc = descHTML(p);
+    const related = P.filter((x) => x.id !== p.id && x.category === p.category && x.stock > 0)
+      .sort((a, b) => hash(p.id + a.id) - hash(p.id + b.id)).slice(0, 8);
+    const loadingDesc = shopifyOn && !p.detailed;
+    view.innerHTML = `
+      <div class="container">
+        <nav class="crumbs" aria-label="Ruta">
+          <button data-action="back">${icon('arrow')} Volver</button>
+          <span aria-hidden="true">·</span>
+          <button data-action="home">Inicio</button>
+          ${catName ? `<span aria-hidden="true">›</span><button data-action="cat" data-cat="${esc(p.category)}">${esc(catName)}</button>` : ''}
+          <span aria-hidden="true">›</span><span class="cur">${esc(p.name)}</span>
+        </nav>
       <div class="pd" data-id="${esc(p.id)}" style="--h:${p.hue}">
         <div class="pd__gallery">
           <div class="pd__main" id="pdMain">${media(p)}<div class="badges">${badgesHTML(p)}</div></div>
@@ -623,11 +717,10 @@
             `<button data-action="thumb" data-src="${esc(src)}" class="${i === 0 ? 'is-active' : ''}" aria-label="Foto ${i + 1}"><img src="${esc(src)}" alt=""></button>`).join('')}</div>` : ''}
         </div>
         <div class="pd__info">
-          <span class="card__cat">${esc(catById(p.category)?.name || '')}</span>
-          <h2>${esc(p.name)}</h2>
+          <span class="card__cat">${esc(catName)}</span>
+          <h1>${esc(p.name)}</h1>
           ${p.rating > 0 ? `<div class="rating">${stars(p)}</div>` : ''}
           <div class="pd__price" id="pdPrice"></div>
-          ${p.description ? `<p class="pd__desc">${esc(p.description)}</p>` : ''}
           ${p.specs.length ? `<ul class="pd__specs">${p.specs.map((s) => `<li>${icon('check')}${esc(s)}</li>`).join('')}</ul>` : ''}
           ${p.variants.length > 1 ? `<div class="pd__opts"><span class="pd__optlabel">Elige una opción</span><div class="pills">${p.variants.map((v, i) =>
             `<button class="pill${i === pd.vi ? ' is-active' : ''}" data-action="variant" data-i="${i}" ${v.stock <= 0 ? 'disabled' : ''} aria-pressed="${i === pd.vi}">${esc(v.title)}</button>`).join('')}</div></div>` : ''}
@@ -643,13 +736,35 @@
           </div>
           <button class="btn btn--ghost btn--block" data-action="pd-buy">Comprar ahora</button>
           <div class="pd__trust"><span>${icon('truck')} Envío gratis, mismo día</span><span>${icon('shield')} Compra segura</span></div>
+          <div class="pshare"><span>Compartir:</span>
+            <a href="https://wa.me/?text=${encodeURIComponent(`${p.name} — ${location.origin}${location.pathname}#/producto/${encodeURIComponent(p.id)}`)}" target="_blank" rel="noopener">${icon('wa')} WhatsApp</a>
+            <button data-action="copy-link">Copiar enlace</button>
+          </div>
         </div>
+      </div>
+      <section class="pdesc" aria-labelledby="pdescTitle">
+        <h2 id="pdescTitle">Descripción del producto</h2>
+        ${desc ? `<div class="pdesc__body">${desc}</div>`
+          : `<p class="muted">${loadingDesc ? 'Cargando descripción…' : 'Este producto aún no tiene descripción. Escríbenos y te damos todos los detalles.'}</p>`}
+      </section>
+      ${related.length ? `<section class="prelated" aria-labelledby="prelTitle">
+        <h2 id="prelTitle">También te puede gustar</h2>
+        <div class="grid">${related.map((x, i) => card(x, i, false)).join('')}</div>
+      </section>` : ''}
       </div>`;
     pdSync();
-    openLayer('product');
-    // Si faltan datos completos, se piden y se refresca la ventana (sin cerrarla)
+    if (!keep) {
+      window.scrollTo(0, 0);
+      document.title = `${p.name} — ${S.name}`;
+      const blurb = (p.description || '').replace(/\s+/g, ' ').trim().slice(0, 155);
+      descMeta?.setAttribute('content', blurb || baseDesc);
+    }
+    // Si faltan datos completos (descripción, fotos, variantes), se piden y se refresca la página sin moverla
     if (!keep && shopifyOn && !p.detailed) {
-      loadDetail(p).then((changed) => { if (changed && pd && pd.p === p && openName === 'product') openProduct(p.id, true); });
+      loadDetail(p).then((changed) => {
+        if (!changed || !inProduct || !pd || pd.p !== p) return;
+        const y = scrollY; renderProductPage(p.id, true); window.scrollTo(0, y);
+      });
     }
   }
 
@@ -796,6 +911,16 @@
     const id = el.closest('[data-id]')?.dataset.id;
     switch (el.dataset.action) {
       case 'view': openProduct(id); break;
+      case 'home': leaveProduct(); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); break;
+      case 'back':
+        if (history.state?.pp) history.back();
+        else { leaveProduct(); window.scrollTo(0, homeY); }
+        break;
+      case 'copy-link': {
+        const url = `${location.origin}${location.pathname}#/producto/${encodeURIComponent(id)}`;
+        (navigator.clipboard?.writeText(url) || Promise.reject()).then(() => toast('Enlace copiado'), () => toast('No pudimos copiar el enlace', { type: 'warn' }));
+        break;
+      }
       case 'suggest': closeSuggest(); openProduct(id); break;
       case 'search-all': applySearch(); break;
       case 'add': {
@@ -887,6 +1012,8 @@
     initHero();
     $('#toolbar').hidden = true;
     $('#grid').innerHTML = skeletons(8);
+    // Enlace directo a un producto: mostrar la ficha (cargando) en vez de la portada
+    if (productHash()) { inProduct = true; home.hidden = true; view.hidden = false; view.innerHTML = '<div class="container"><p class="muted pview__loading">Cargando producto…</p></div>'; }
 
     let list = window.PRODUCTS || [];
     if (shopifyOn) {
@@ -904,9 +1031,8 @@
     renderCart();
     observeReveals();
 
-    // Enlaces directos (los usa el tema de Shopify): /#producto=<handle>  y  /#carrito
-    const pm = location.hash.match(/^#producto=(.+)$/);
-    if (pm) { const p = byId(decodeURIComponent(pm[1])); if (p) openProduct(p.id); }
+    // Enlaces directos: /#/producto/<handle> (también /#producto=<handle>, que usa el tema de Shopify) y /#carrito
+    if (productHash()) route();
     else if (location.hash === '#carrito') openLayer('cart');
   }
   start();
