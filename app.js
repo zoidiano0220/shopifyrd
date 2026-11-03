@@ -655,6 +655,7 @@
   function showHome() {
     if (!inProduct) return;
     inProduct = false; view.hidden = true; home.hidden = false;
+    document.body.classList.remove('is-product');
     document.title = baseTitle; descMeta?.setAttribute('content', baseDesc);
   }
   // Salir de la ficha sin tocar el historial del producto (para filtros, búsqueda, categorías)
@@ -687,6 +688,7 @@
   function renderProductPage(id, keep = false) {
     const p = byId(id);
     inProduct = true; home.hidden = true; view.hidden = false;
+    document.body.classList.add('is-product');
     if (!p) {
       view.innerHTML = `<div class="container"><div class="empty"><div class="empty__emoji">🔎</div><h3>No encontramos este producto</h3>
         <p>Puede que ya no esté disponible. Mira el resto de nuestro catálogo.</p>
@@ -698,17 +700,13 @@
     pd = { p, vi: first, qty: keep && pd && pd.p === p ? pd.qty : 1 };
     const catName = catById(p.category)?.name || '';
     const desc = descHTML(p);
-    const related = P.filter((x) => x.id !== p.id && x.category === p.category && x.stock > 0)
-      .sort((a, b) => hash(p.id + a.id) - hash(p.id + b.id)).slice(0, 8);
+    const long = desc.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().length > 320;
     const loadingDesc = shopifyOn && !p.detailed;
     view.innerHTML = `
       <div class="container">
         <nav class="crumbs" aria-label="Ruta">
           <button data-action="back">${icon('arrow')} Volver</button>
-          <span aria-hidden="true">·</span>
-          <button data-action="home">Inicio</button>
-          ${catName ? `<span aria-hidden="true">›</span><button data-action="cat" data-cat="${esc(p.category)}">${esc(catName)}</button>` : ''}
-          <span aria-hidden="true">›</span><span class="cur">${esc(p.name)}</span>
+          ${catName ? `<span aria-hidden="true">·</span><button data-action="cat" data-cat="${esc(p.category)}">${esc(catName)}</button>` : ''}
         </nav>
       <div class="pd" data-id="${esc(p.id)}" style="--h:${p.hue}">
         <div class="pd__gallery">
@@ -744,13 +742,10 @@
       </div>
       <section class="pdesc" aria-labelledby="pdescTitle">
         <h2 id="pdescTitle">Descripción del producto</h2>
-        ${desc ? `<div class="pdesc__body">${desc}</div>`
+        ${desc ? `<div class="pdesc__body${long ? ' is-clamped' : ''}" id="pdescBody">${desc}</div>
+            ${long ? '<button class="pdesc__more" data-action="desc-toggle" aria-expanded="false" aria-controls="pdescBody">Ver más</button>' : ''}`
           : `<p class="muted">${loadingDesc ? 'Cargando descripción…' : 'Este producto aún no tiene descripción. Escríbenos y te damos todos los detalles.'}</p>`}
       </section>
-      ${related.length ? `<section class="prelated" aria-labelledby="prelTitle">
-        <h2 id="prelTitle">También te puede gustar</h2>
-        <div class="grid">${related.map((x, i) => card(x, i, false)).join('')}</div>
-      </section>` : ''}
       </div>`;
     pdSync();
     if (!keep) {
@@ -911,6 +906,11 @@
     const id = el.closest('[data-id]')?.dataset.id;
     switch (el.dataset.action) {
       case 'view': openProduct(id); break;
+      case 'desc-toggle': {
+        const body = $('#pdescBody'), open = body.classList.toggle('is-clamped') === false;
+        el.textContent = open ? 'Ver menos' : 'Ver más'; el.setAttribute('aria-expanded', open);
+        break;
+      }
       case 'home': leaveProduct(); window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); break;
       case 'back':
         if (history.state?.pp) history.back();
@@ -1013,7 +1013,7 @@
     $('#toolbar').hidden = true;
     $('#grid').innerHTML = skeletons(8);
     // Enlace directo a un producto: mostrar la ficha (cargando) en vez de la portada
-    if (productHash()) { inProduct = true; home.hidden = true; view.hidden = false; view.innerHTML = '<div class="container"><p class="muted pview__loading">Cargando producto…</p></div>'; }
+    if (productHash()) { inProduct = true; home.hidden = true; view.hidden = false; document.body.classList.add('is-product'); view.innerHTML = '<div class="container"><p class="muted pview__loading">Cargando producto…</p></div>'; }
 
     let list = window.PRODUCTS || [];
     if (shopifyOn) {
