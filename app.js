@@ -622,11 +622,20 @@
   const baseDesc = descMeta?.getAttribute('content') || '';
   let inProduct = false, homeY = 0;
 
+  // Enlace corto por producto: #p/<código de 6 letras/números> (sale del handle, así que no cambia).
+  // Los enlaces largos anteriores (#/producto/<handle> y #producto=<handle>) siguen funcionando.
+  const pcode = (s) => {
+    let h = 2166136261;
+    for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+    return ((h >>> 0) % 2176782336).toString(36).padStart(6, '0');
+  };
+  const plink = (id) => `#p/${pcode(id)}`;
   const productHash = () => {
-    const m = location.hash.match(/^#\/producto\/(.+)$/) || location.hash.match(/^#producto=(.+)$/);
+    const m = location.hash.match(/^#p\/([^/?]+)$/) || location.hash.match(/^#\/producto\/(.+)$/) || location.hash.match(/^#producto=(.+)$/);
     if (!m) return null;
     try { return decodeURIComponent(m[1]); } catch { return m[1]; }
   };
+  const findProduct = (token) => byId(token) || P.find((x) => pcode(x.id) === token);
 
   // Deja solo formato básico (párrafos, saltos, listas, negritas): la descripción viene de Shopify
   const KEEP = new Set(['P', 'BR', 'UL', 'OL', 'LI', 'STRONG', 'B', 'EM', 'I', 'U', 'H4']);
@@ -680,13 +689,13 @@
     if (openName) closeLayer();
     if (!keep) {
       if (!inProduct) homeY = scrollY;
-      if (productHash() !== id) history.pushState({ pp: 1 }, '', '#/producto/' + encodeURIComponent(id));
+      if (location.hash !== plink(id)) history.pushState({ pp: 1 }, '', plink(id));
     }
     renderProductPage(id, keep);
   }
 
   function renderProductPage(id, keep = false) {
-    const p = byId(id);
+    const p = findProduct(id);
     inProduct = true; home.hidden = true; view.hidden = false;
     document.body.classList.add('is-product');
     if (!p) {
@@ -735,7 +744,7 @@
           <button class="btn btn--ghost btn--block" data-action="pd-buy">Comprar ahora</button>
           <div class="pd__trust"><span>${icon('truck')} Envío gratis, mismo día</span><span>${icon('shield')} Compra segura</span></div>
           <div class="pshare"><span>Compartir:</span>
-            <a href="https://wa.me/?text=${encodeURIComponent(`${p.name} — ${location.origin}${location.pathname}#/producto/${encodeURIComponent(p.id)}`)}" target="_blank" rel="noopener">${icon('wa')} WhatsApp</a>
+            <a href="https://wa.me/?text=${encodeURIComponent(`${p.name} — ${location.origin}${location.pathname}${plink(p.id)}`)}" target="_blank" rel="noopener">${icon('wa')} WhatsApp</a>
             <button data-action="copy-link">Copiar enlace</button>
           </div>
         </div>
@@ -917,7 +926,7 @@
         else { leaveProduct(); window.scrollTo(0, homeY); }
         break;
       case 'copy-link': {
-        const url = `${location.origin}${location.pathname}#/producto/${encodeURIComponent(id)}`;
+        const url = `${location.origin}${location.pathname}${plink(id)}`;
         (navigator.clipboard?.writeText(url) || Promise.reject()).then(() => toast('Enlace copiado'), () => toast('No pudimos copiar el enlace', { type: 'warn' }));
         break;
       }
