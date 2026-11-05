@@ -13,7 +13,7 @@ window.STORE = {
 
   // Datos de contacto. Si dejas uno VACÍO, la página no lo muestra.
   // WhatsApp en formato internacional, sin + ni espacios (ej. 18095551234).
-  whatsapp: '',                           // ← PONER tu número cuando lo tengas
+  whatsapp: '18493820480',                // WhatsApp de la tienda (849-382-0480, formato internacional)
   email: '',                              // ← PONER tu correo
   phone: '',                              // ← PONER tu teléfono
   address: 'Santo Domingo, República Dominicana',
